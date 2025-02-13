@@ -1,4 +1,9 @@
-<!DOCTYPE html>
+package helpers
+func PageDeleted() string {
+
+
+
+return 	`<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,9 +15,9 @@
 <body>
     <div class="container">
         <div class="error-content">
-            <h1>{{.Code}}</h1>
+            <h1>500</h1>
             <h2>oops!</h2>
-            <p>{{.MessageError}}</p>
+            <p>Something went wrong on our end. We're working on fixing it—please try again later!</p>
             <div class="buttons">
                 <a href="/" class="btn">Go home</a>
                 <a href="" class="btn">Contact us</a>
@@ -24,3 +29,5 @@
     </div>
 </body>
 </html>
+	`
+}

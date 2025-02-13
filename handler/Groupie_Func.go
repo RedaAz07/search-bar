@@ -3,48 +3,80 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
+	"sync"
 
 	"groupie/helpers"
 	tools "groupie/tools"
 )
 
 var Artists []tools.Artists
+type Result struct {
+	Artist        []tools.Artists
+	SearchElement map[string]string
+}
+var  SearchArtist = make(map[string]string)
 
-func GroupieFunc(w http.ResponseWriter, r *http.Request) {
+func Groupie_Func(w http.ResponseWriter, r *http.Request) {
+	var wg sync.WaitGroup
+	var wu sync.Mutex
 
-
-	// check the path 
+	// check the path
 	if r.URL.Path != "/" {
-
 		// execute the not found  template
 		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorNotFound, http.StatusNotFound)
 		return
 	}
-	// check the methd  
-
+	// check the methd
 	if r.Method != http.MethodGet {
-
 		// execute the not found  template
 		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorMethodnotAll, http.StatusMethodNotAllowed)
 		return
 	}
-
 	url := "https://groupietrackers.herokuapp.com/api/artists"
-	// get the api data 
+	// get the api data
 	res, err := http.Get(url)
 	if err != nil {
-
 		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorInternalServerErr, http.StatusInternalServerError)
 		return
 	}
 	defer res.Body.Close()
-// decode the jsone data 
+	// decode the jsone data
 	err = json.NewDecoder(res.Body).Decode(&Artists)
 	if err != nil {
-
 		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorInternalServerErr, http.StatusInternalServerError)
 		return
 	}
 
-	helpers.RenderTemplates(w, "index.html", Artists, 200)
+	// add  name
+	for _, structs := range Artists {
+		SearchArtist[structs.Name] = "artist/band name"
+		SearchArtist[structs.FirstAlbum] = "first album date"
+		SearchArtist[strconv.Itoa(structs.CreationDate)] = "creation date"
+
+		for _, v := range structs.Members {
+			SearchArtist[v] = "members"
+		}
+// !  i use  goroutin , mutex 
+		wg.Add(1)
+		go func(locId string) {
+			defer wg.Done()
+			Loc := &tools.Locations{}
+			helpers.Fetch_By_Id(locId, Loc)
+			wu.Lock()
+			for _, Location := range Loc.Locations {
+				SearchArtist[Location] = "locations"
+			}
+			wu.Unlock()
+		}(structs.Locations)
+
+	}
+	wg.Wait()
+	// ! end 
+	lresult := Result{
+		Artist:        Artists,
+		SearchElement: SearchArtist,
+	}
+
+	helpers.RenderTemplates(w, "index.html", lresult, 200)
 }

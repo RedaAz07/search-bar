@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detail card</title>
+    <link rel="stylesheet" href="/static/card_Detail.css" />
+    <link rel="shortcut icon" href="/static/images/artist.png" type="image/x-icon">
+  </head>
+
+  <body>
+    <nav>
+      <div class="title">
+        <a href="/">Groupie tracker</a>
+      </div>
+      <div class="users">
+        <a href="https://github.com/AhmedBaid">abaid</a>
+        <a href="https://github.com/RedaAz07">ranniz</a>
+        <div class="mode">
+          <input type="checkbox" name="" id="darkmode-toggle">
+          <label for="darkmode-toggle">
+              <svg  class="moon" width="13px" height="13px" viewBox="0 0 35 35" data-name="Layer 2" id="Layer_2" xmlns="http://www.w3.org/2000/svg"><path d="M18.44,34.68a18.22,18.22,0,0,1-2.94-.24,18.18,18.18,0,0,1-15-20.86A18.06,18.06,0,0,1,9.59.63,2.42,2.42,0,0,1,12.2.79a2.39,2.39,0,0,1,1,2.41L11.9,3.1l1.23.22A15.66,15.66,0,0,0,23.34,21h0a15.82,15.82,0,0,0,8.47.53A2.44,2.44,0,0,1,34.47,25,18.18,18.18,0,0,1,18.44,34.68ZM10.67,2.89a15.67,15.67,0,0,0-5,22.77A15.66,15.66,0,0,0,32.18,24a18.49,18.49,0,0,1-9.65-.64A18.18,18.18,0,0,1,10.67,2.89Z"/></svg>
+              <svg class="sun" width="17px" height="17px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>
+              </svg>              
+          </label>
+        </div>
+      </div>
+    </nav>
+    <div class="countainer">
+      <img src="{{  .Artist.Image}}" alt="">
+<br>
+<h1>{{  .Artist.Name}}</h1>
+<br>
+<ul>
+  {{  range .Artist.Members}}
+  <li>{{.}}</li>
+  {{end}}
+</ul>
+<p>creation :  {{  .Artist.CreationDate}}</p>
+<p>first album  {{.Artist.FirstAlbum}}</p>
+<br><br><br><br>
+<div>
+  <ul>
+    {{   range .Dates.Dates}}
+<li>{{.}}</li>
+    {{end}}
+  </ul>
+  <br>
+  <br>
+  <ul>
+    {{   range .Locations.Locations}}
+<li>{{.}}</li>
+    {{end}}
+  </ul>
+</div>
+last
+<div>
+  <ul>
+    {{ range $key, $value := .Relations.DatesLocations }}
+        <li key="{{$key}}"> {{ $key }}     at : <p> {{range $value}}{{.}} {{end}} </p> </li>
+    {{ end }}
+</ul>
+      <a href="/" class="go-back">Go back to groups-card</a>
+    </div>
+  </body>
+</html>
