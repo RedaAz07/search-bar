@@ -36,12 +36,12 @@
     </div>
     <!--   !   search bar  -->
     <header>
-      <form action="/search" method="post">
+      <form action="/search" method="get">
         <label for="search"></label>
         <input   list="search" type="text"  name="search"    >
         <datalist  id="search">
           {{range $key ,$value :=  .SearchElement  }}
-          <option value="{{$key}}#{{$value}}"></option>
+          <option value="{{$key}}"></option>
           {{end}}
         </datalist>
         <input type="submit" value="search">

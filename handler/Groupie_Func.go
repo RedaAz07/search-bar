@@ -18,7 +18,7 @@ type Result struct {
 var  SearchArtist = make(map[string]string)
 
 func Groupie_Func(w http.ResponseWriter, r *http.Request) {
-	var wg sync.WaitGroup
+//	var wg sync.WaitGroup
 	var wu sync.Mutex
 
 	// check the path
@@ -50,28 +50,25 @@ func Groupie_Func(w http.ResponseWriter, r *http.Request) {
 
 	// add  name
 	for _, structs := range Artists {
-		SearchArtist[structs.Name] = "artist/band name"
-		SearchArtist[structs.FirstAlbum] = "first album date"
-		SearchArtist[strconv.Itoa(structs.CreationDate)] = "creation date"
+		SearchArtist[structs.Name+"#artist/band name"] = "artist/band name"
+		SearchArtist[structs.FirstAlbum+"#first album date"] = "first album date"
+		SearchArtist[strconv.Itoa(structs.CreationDate)+"#creation date"] = "creation date"
 
 		for _, v := range structs.Members {
-			SearchArtist[v] = "members"
+			SearchArtist[v+"#members"] = "members"
 		}
 // !  i use  goroutin , mutex 
-		wg.Add(1)
 		go func(locId string) {
-			defer wg.Done()
 			Loc := &tools.Locations{}
 			helpers.Fetch_By_Id(locId, Loc)
 			wu.Lock()
 			for _, Location := range Loc.Locations {
-				SearchArtist[Location] = "locations"
+				SearchArtist[Location+"#locations"] = "locations"
 			}
-			wu.Unlock()
+			wu.Unlock()	
 		}(structs.Locations)
 
 	}
-	wg.Wait()
 	// ! end 
 	lresult := Result{
 		Artist:        Artists,
