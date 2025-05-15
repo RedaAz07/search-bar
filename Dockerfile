@@ -10,9 +10,9 @@ COPY . .
 
 RUN go build -o main ./cmd
 
-LABEL maintainer="ranniz | abaid"
+LABEL maintainer="ranniz | abaid | mennaas"
 LABEL version="1.0"
-LABEL description="groupie-tracker"
+LABEL description="groupie-tracker-filters"
 
 EXPOSE 8080
 

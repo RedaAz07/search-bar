@@ -23,7 +23,7 @@ body::-webkit-scrollbar {
   margin: 90px auto 20px auto;
 }
 
-.filter .xmark-button {
+.filter .filter-button{
   display: none;
 }
 input[type="number"] {
@@ -33,7 +33,7 @@ input[type="number"] {
 
 .show {
   position: relative;
-  display: none;
+  display: block;
   padding: 20px;
   margin: auto;
   color: white;
@@ -63,16 +63,17 @@ input[type="number"] {
   background-color: #2a2e42;
 }
 .filter:has(#filter:checked) + .show {
-  display: block;
+  display: none;
 }
 
-.filter:has(#filter:checked) .xmark-button {
+.filter:has(#filter:checked) .filter-button  {
   display: flex;
 }
 
-.filter:has(#filter:checked) .filter-button {
+.filter:has(#filter:checked) .xmark-button{
   display: none;
 }
+
 
 .content {
   display: flex;

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -11,66 +12,61 @@ import (
 func Detail_Card_Func(w http.ResponseWriter, r *http.Request) {
 	// check the method
 	if r.Method != http.MethodGet {
-		// execute the not found  template
+		// execute the status page template
 		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorMethodnotAll, http.StatusMethodNotAllowed)
 		return
 	}
-	type fetchingData struct {
-		Artist    *tools.Artists
-		Locations *tools.Locations
-		Dates     *tools.ConcertDates
-		Relations *tools.Relations
-	}
-	// get the id from url
+
+	// Get the id from the url
 	id := r.URL.Query().Get("id")
 	// to int
 	Id, err := strconv.Atoi(id)
 	if err != nil {
-
 		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorBadReq, http.StatusBadRequest)
 		return
 	}
+	// initialisation of variables that we need
 	var artistFound *tools.Artists
-	// get the user
-	for _, v := range Artists {
-		if Id == v.Id {
-			artistFound = &v
-			break
-		}
-	}
-	//  to see if the user exists
-	if artistFound == nil {
+	var locations *tools.Locations
+	var dates *tools.ConcertDates
+	var relations *tools.Relations
+	errFetch := helpers.Fetch(fmt.Sprintf("https://groupietrackers.herokuapp.com/api/artists/%d", Id), &artistFound)
 
+	if errFetch != nil {
+		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorInternalServerErr, http.StatusInternalServerError)
+		return
+	}
+	if artistFound.Id == 0 {
 		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorNotFound, http.StatusNotFound)
 		return
 	}
-	var locations tools.Locations
-	var dates tools.ConcertDates
-	var relations tools.Relations
-	// fetch the location and get the result  in the location variavle
-	errr := helpers.Fetch_By_Id(artistFound.Locations, &locations)
-	if errr != nil {
-		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorInternalServerErr, 500)
+
+	// declarations of urls
+	Locations_url := artistFound.Locations
+	ConcertDates_url := artistFound.ConcertDates
+	Relations_url := artistFound.Relations
+
+	// fetch the nested data
+	errLoc := helpers.Fetch(Locations_url, &locations)
+	errLates := helpers.Fetch(ConcertDates_url, &dates)
+	errRelation := helpers.Fetch(Relations_url, &relations)
+
+	if errLoc != nil || errLates != nil || errRelation != nil {
+		
+		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorInternalServerErr, http.StatusInternalServerError)
 		return
 	}
-	// fetch the dates and get the result  in the dates variavle
-	errr = helpers.Fetch_By_Id(artistFound.ConcertDates, &dates)
-	if errr != nil {
-		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorInternalServerErr, 500)
-		return
-	}
-	// fetch the relations and get the result  in the relations variavle
-	errr = helpers.Fetch_By_Id(artistFound.Relations, &relations)
-	if errr != nil {
-		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorInternalServerErr, 500)
-		return
-	}
-	// set all the that that we found into the fetching variable
-	fetching := fetchingData{
+	// set all the data that we fetched into one variable
+	fetching_data := struct {
+		Artist    *tools.Artists
+		Locations *tools.Locations
+		Dates     *tools.ConcertDates
+		Relations *tools.Relations
+	}{
 		Artist:    artistFound,
-		Locations: &locations,
-		Dates:     &dates,
-		Relations: &relations,
+		Locations: locations,
+		Dates:     dates,
+		Relations: relations,
 	}
-	helpers.RenderTemplates(w, "detailsCard.html", fetching, 200)
+	helpers.RenderTemplates(w, "detailsCard.html", fetching_data, http.StatusOK)
 }

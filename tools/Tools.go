@@ -5,10 +5,17 @@ import (
 	"text/template"
 )
 
-var Tp *template.Template
-
 // our data structure
 type (
+	Data struct {
+		Artists   *[]Artists
+		Locations []string
+		MinCrDate int
+		MaxCrDate int
+		Span int
+		SearchElement map[string]string
+
+	}
 	ErrorPage struct {
 		Code         int
 		ErrorMessage string
@@ -25,10 +32,15 @@ type (
 		Relations    string   `json:"relations"`
 	}
 	Locations struct {
-		Id        int      `json:"id"`
+		ID        int      `json:"id"`
 		Locations []string `json:"locations"`
 		Dates     string   `json:"dates"`
 	}
+
+	Index struct {
+		Index []Locations `json:"index"`
+	}
+
 	ConcertDates struct {
 		Id    int      `json:"id"`
 		Dates []string `json:"dates"`
@@ -40,23 +52,25 @@ type (
 )
 
 // NewErrorPage creates a new ErrorPage
-var ErrorBadReq = ErrorPage{
-	Code:         http.StatusBadRequest,
-	ErrorMessage: "Oops! It looks like there was an issue with your request. Please check your input and try again.",
-}
+var (
+	Tp          *template.Template
+	ErrorBadReq = ErrorPage{
+		Code:         http.StatusBadRequest,
+		ErrorMessage: "Oops! It looks like there was an issue with your request. Please check your input and try again.",
+	}
 
-var ErrorNotFound = ErrorPage{
-	Code:         http.StatusNotFound,
-	ErrorMessage: "Uh-oh! The page you're looking for doesn't exist. It might have been moved or deleted.",
-}
+	ErrorNotFound = ErrorPage{
+		Code:         http.StatusNotFound,
+		ErrorMessage: "Uh-oh! The page you're looking for doesn't exist. It might have been moved or deleted.",
+	}
 
-var ErrorMethodnotAll = ErrorPage{
-	Code:         http.StatusMethodNotAllowed,
-	ErrorMessage: "The request method is not supported for this resource. Please check and try again with a valid method.",
-}
+	ErrorMethodnotAll = ErrorPage{
+		Code:         http.StatusMethodNotAllowed,
+		ErrorMessage: "The request method is not supported for this resource. Please check and try again with a valid method.",
+	}
 
-var ErrorInternalServerErr = ErrorPage{
-	Code:         http.StatusInternalServerError,
-	ErrorMessage: "Something went wrong on our end. We're working on fixing it—please try again later!",
-}
-
+	ErrorInternalServerErr = ErrorPage{
+		Code:         http.StatusInternalServerError,
+		ErrorMessage: "Something went wrong on our end. We're working on fixing it—please try again later!",
+	}
+)

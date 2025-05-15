@@ -3,65 +3,90 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Detail card</title>
+    <title>{{.Artist.Name}}</title>
     <link rel="stylesheet" href="/static/card_Detail.css" />
     <link rel="shortcut icon" href="/static/images/artist.png" type="image/x-icon">
   </head>
 
   <body>
+    <!-- Navbar -->
     <nav>
       <div class="title">
         <a href="/">Groupie tracker</a>
       </div>
       <div class="users">
-        <a href="https://github.com/AhmedBaid">abaid</a>
-        <a href="https://github.com/RedaAz07">ranniz</a>
+        <a href="https://github.com/AhmedBaid" target="_blank">abaid</a>
+        <a href="https://github.com/RedaAz07" target="_blank">ranniz</a>
+        <a href="https://github.com/AymenOski" target="_blank">ayazizi</a>
         <div class="mode">
           <input type="checkbox" name="" id="darkmode-toggle">
           <label for="darkmode-toggle">
-              <svg  class="moon" width="13px" height="13px" viewBox="0 0 35 35" data-name="Layer 2" id="Layer_2" xmlns="http://www.w3.org/2000/svg"><path d="M18.44,34.68a18.22,18.22,0,0,1-2.94-.24,18.18,18.18,0,0,1-15-20.86A18.06,18.06,0,0,1,9.59.63,2.42,2.42,0,0,1,12.2.79a2.39,2.39,0,0,1,1,2.41L11.9,3.1l1.23.22A15.66,15.66,0,0,0,23.34,21h0a15.82,15.82,0,0,0,8.47.53A2.44,2.44,0,0,1,34.47,25,18.18,18.18,0,0,1,18.44,34.68ZM10.67,2.89a15.67,15.67,0,0,0-5,22.77A15.66,15.66,0,0,0,32.18,24a18.49,18.49,0,0,1-9.65-.64A18.18,18.18,0,0,1,10.67,2.89Z"/></svg>
-              <svg class="sun" width="17px" height="17px" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5V3m0 18v-2M7.05 7.05 5.636 5.636m12.728 12.728L16.95 16.95M5 12H3m18 0h-2M7.05 16.95l-1.414 1.414M18.364 5.636 16.95 7.05M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"/>
-              </svg>              
+              <svg class="moon" width="15px" height="15px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd" />
+              </svg>
+              <svg class="sun" width="15px" height="15px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+              </svg>                
           </label>
         </div>
       </div>
     </nav>
-    <div class="countainer">
-      <img src="{{  .Artist.Image}}" alt="">
-<br>
-<h1>{{  .Artist.Name}}</h1>
-<br>
-<ul>
-  {{  range .Artist.Members}}
-  <li>{{.}}</li>
-  {{end}}
-</ul>
-<p>creation :  {{  .Artist.CreationDate}}</p>
-<p>first album  {{.Artist.FirstAlbum}}</p>
-<br><br><br><br>
-<div>
-  <ul>
-    {{   range .Dates.Dates}}
-<li>{{.}}</li>
-    {{end}}
-  </ul>
-  <br>
-  <br>
-  <ul>
-    {{   range .Locations.Locations}}
-<li>{{.}}</li>
-    {{end}}
-  </ul>
-</div>
-last
-<div>
-  <ul>
-    {{ range $key, $value := .Relations.DatesLocations }}
-        <li key="{{$key}}"> {{ $key }}     at : <p> {{range $value}}{{.}} {{end}} </p> </li>
-    {{ end }}
-</ul>
-      <a href="/" class="go-back">Go back to groups-card</a>
+    <!-- Detail card -->
+    <div class="detailCard">
+      <!-- display name and image -->
+      <div class="image-text">
+        <img src="{{  .Artist.Image}}" alt="">
+        <h1>{{.Artist.Name}}</h1>
+        <ul>
+            <li>{{.Artist.CreationDate}}</li>
+            <div class="list">
+              <li>🗓  {{.Artist.FirstAlbum}}</li>
+            </div>
+        </ul>
+      </div>
+      <!-- display members -->
+      <div class="firstMerge">
+        <div class="members">
+          <h2 class="lien">Members:</h2>
+          <ul>
+            {{  range .Artist.Members}}
+            <li>👤  {{.}}</li>
+            {{end}}
+          </ul>
+        </div>
+        <!-- display locations -->
+        <div class="locations">
+          <h2 class="lien">Locations:</h2>
+          <ul>
+            {{   range .Locations.Locations}}
+              <li>📌  {{.}}</li>
+            {{end}}
+          </ul>
+        </div>
+      </div>
+      <div class="secondMerge">
+        <!-- display concert dates  -->
+        <div class="concert-dates">
+          <h2 class="lien">Concert Dates:</h2>
+          <ul>
+            {{   range .Dates.Dates}}
+              <li>📅  {{.}}</li>
+            {{end}}
+          </ul>
+        </div>
+        <!-- display relations -->
+        <h2 class="text">Relations:</h2>
+        <div class="relations">  
+          {{ range $key, $value := .Relations.DatesLocations }}
+          <details>
+            <summary>🔗  {{ $key }}   </summary>
+              {{range $value}}
+                <p>📅  {{.}} </p> 
+              {{ end }}
+          </details>
+          {{ end}}
+        </div> 
+      </div>
     </div>
   </body>
 </html>
