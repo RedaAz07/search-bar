@@ -32,19 +32,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 
 	}
 	searchvalue=strings.TrimSpace(strings.ToLower(searchvalue))
-	/*
-		index := strings.LastIndex(searchvalue, "-")
-		   	fmt.Println("")
-
-		   	if index >  1  {
-
-		   		searchvalue = strings.ToLower(searchvalue[0:index])
-		   	}else{
-		   	searchvalue = strings.ToLower(searchvalue)
-
-		   	} */
-
-	//	data := tools.Data{}
+	
 
 	var artistsData *[]tools.Artists
 	err = helpers.Fetch("https://groupietrackers.herokuapp.com/api/artists", &artistsData)
@@ -67,28 +55,28 @@ func Search(w http.ResponseWriter, r *http.Request) {
 
 	var FilterArt []tools.Artists
 
-	for r, i := range *artistsData {
+	for r, artist := range *artistsData {
 
 		x := true
-		str1 := strings.ToLower(i.Name)
+		str1 := strings.ToLower(artist.Name)
 		if strings.Contains(str1, searchvalue) {
 
-			FilterArt = append(FilterArt, i)
+			FilterArt = append(FilterArt, artist)
 			x = false
 
 		}
-		if x && searchvalue == i.FirstAlbum {
-			FilterArt = append(FilterArt, i)
+		if x && searchvalue == artist.FirstAlbum {
+			FilterArt = append(FilterArt, artist)
 			x = false
 		}
-		if x && searchvalue == strconv.Itoa(i.CreationDate) {
-			FilterArt = append(FilterArt, i)
+		if x && searchvalue == strconv.Itoa(artist.CreationDate) {
+			FilterArt = append(FilterArt, artist)
 			x = false
 		}
-		for _, j := range i.Members {
+		for _, j := range artist.Members {
 			str2 := strings.ToLower(j)
 			if x && strings.Contains(str2, searchvalue) {
-				FilterArt = append(FilterArt, i)
+				FilterArt = append(FilterArt, artist)
 				x = false
 			}
 		}
@@ -98,7 +86,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 					str3 := strings.ToLower(j)
 
 					if x && strings.Contains(str3, searchvalue) {
-						FilterArt = append(FilterArt, i)
+						FilterArt = append(FilterArt, artist)
 						x = false
 					}
 				}

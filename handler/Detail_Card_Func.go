@@ -37,8 +37,8 @@ func Detail_Card_Func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if artistFound.Id == 0 {
-		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorNotFound, http.StatusNotFound)
-		return
+		helpers.RenderTemplates(w, "statusPage.html", tools.ErrorNotFound, http.StatusNotFound)	
+			return
 	}
 
 	// declarations of urls
